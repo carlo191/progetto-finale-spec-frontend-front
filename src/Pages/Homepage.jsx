@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { useGlobalContext } from "../context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const { productsList } = useGlobalContext();
+  const navigate = useNavigate();
 
+  const goToDetail = (id) => {
+    navigate(`/product/${id}`);
+  };
   return (
     <>
       <div className="container mt-5">
@@ -25,7 +30,7 @@ export default function HomePage() {
       </div>
 
       <div className="container mt-5">
-        <h2 className="text-center">Prodotti in evidenza</h2>
+        <h2 className="text-center">I nostri prodotti</h2>
         <div className="row mt-4">
           {productsList.map((product) => (
             <div className="col-md-4 mb-4" key={product.id}>
@@ -33,6 +38,9 @@ export default function HomePage() {
                 <div className="card-body">
                   <h5 className="card-title">{product.title}</h5>
                   <h5 className="card-title">{product.category}</h5>
+                  <button onClick={() => goToDetail(product.id)}>
+                    Vedi dettagli
+                  </button>
                 </div>
               </div>
             </div>

@@ -4,13 +4,16 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 // Global variables
 
+import { GlobalProvider } from "./context/GlobalContext";
+
 // Default Layout
 import DefaultLayout from "./layout/DefaultLayout";
 
 
 // Pages
 import HomePage from "./Pages/Homepage";
-import { GlobalProvider } from "./context/GlobalContext";
+import DetailPage from "./Pages/DetailPage";
+
 
 function App() {
   return (
@@ -20,7 +23,7 @@ function App() {
           <Routes>
             <Route Component={DefaultLayout}>
               <Route index element={<HomePage />}></Route>
-
+              <Route path="/product/:id" element={<DetailPage />} />
               <Route path="*" element={""}></Route>
             </Route>
           </Routes>
