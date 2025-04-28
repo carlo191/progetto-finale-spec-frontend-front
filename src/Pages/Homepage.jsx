@@ -10,6 +10,10 @@ export default function HomePage() {
   const goToDetail = (id) => {
     navigate(`/product/${id}`);
   };
+  // 👇 Filtro i prodotti
+  const filteredProducts = productsList.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  );
   return (
     <>
       <div className="container mt-5">
@@ -18,13 +22,15 @@ export default function HomePage() {
 
         <div className="row justify-content-center mt-4">
           <div className="col-md-6">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -32,7 +38,7 @@ export default function HomePage() {
       <div className="container mt-5">
         <h2 className="text-center">I nostri prodotti</h2>
         <div className="row mt-4">
-          {productsList.map((product) => (
+          {filteredProducts.map((product) => (
             <div className="col-md-4 mb-4" key={product.id}>
               <div className="card shadow-sm">
                 <div className="card-body">
