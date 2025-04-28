@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [sortOption, setSortOption] = useState("");
 
   const { productsList } = useGlobalContext();
   const navigate = useNavigate();
@@ -13,15 +14,33 @@ export default function HomePage() {
     navigate(`/product/${id}`);
   };
 
-  const filteredProducts = productsList.filter((product) => {
-    const matchesSearch = product.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesCategory = selectedCategory
-      ? product.category === selectedCategory
-      : true;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredProducts = productsList
+    .filter((product) => {
+      const matchesSearch = product.title
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+      const matchesCategory = selectedCategory
+        ? product.category === selectedCategory
+        : true;
+
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      if (sortOption === "title-asc") {
+        return a.title.localeCompare(b.title);
+      }
+      if (sortOption === "title-desc") {
+        return b.title.localeCompare(a.title);
+      }
+      if (sortOption === "category-asc") {
+        return a.category.localeCompare(b.category);
+      }
+      if (sortOption === "category-desc") {
+        return b.category.localeCompare(a.category);
+      }
+      return 0; // Se non è selezionato nessun ordinamento, lasciali così come sono
+    });
 
   return (
     <>
@@ -144,6 +163,19 @@ export default function HomePage() {
                 <label className="form-check-label" htmlFor="tablet">
                   HeadPhones
                 </label>
+              </div>
+              <div className="mt-3">
+                <select
+                  className="form-select"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                >
+                  <option value="">Ordina per...</option>
+                  <option value="title-asc">Titolo A-Z</option>
+                  <option value="title-desc">Titolo Z-A</option>
+                  <option value="category-asc">Categoria A-Z</option>
+                  <option value="category-desc">Categoria Z-A</option>
+                </select>
               </div>
             </div>
           </div>
