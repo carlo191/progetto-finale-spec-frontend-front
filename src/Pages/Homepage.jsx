@@ -4,16 +4,25 @@ import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   const { productsList } = useGlobalContext();
   const navigate = useNavigate();
 
   const goToDetail = (id) => {
     navigate(`/product/${id}`);
   };
-  // 👇 Filtro i prodotti
-  const filteredProducts = productsList.filter((product) =>
-    product.title.toLowerCase().includes(search.toLowerCase())
-  );
+
+  const filteredProducts = productsList.filter((product) => {
+    const matchesSearch = product.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesCategory = selectedCategory
+      ? product.category === selectedCategory
+      : true;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <>
       <div className="container mt-5">
@@ -26,10 +35,116 @@ export default function HomePage() {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search..."
+                placeholder="Cerca un prodotto..."
+                aria-label="Cerca un prodotto"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
+            </div>
+
+            {/* Categoria checkboxes */}
+            <div className="mt-3">
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value="Smartphone"
+                  id="smartphone"
+                  checked={selectedCategory === "Smartphone"}
+                  onChange={(e) =>
+                    setSelectedCategory(
+                      selectedCategory === "Smartphone" ? "" : "Smartphone"
+                    )
+                  }
+                />
+                <label className="form-check-label" htmlFor="smartphone">
+                  Smartphone
+                </label>
+              </div>
+
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value="Games"
+                  id="games"
+                  checked={selectedCategory === "Games"}
+                  onChange={(e) =>
+                    setSelectedCategory(
+                      selectedCategory === "Games" ? "" : "Games"
+                    )
+                  }
+                />
+                <label className="form-check-label" htmlFor="tablet">
+                  Games
+                </label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value="Laptop"
+                  id="laptop"
+                  checked={selectedCategory === "Laptop"}
+                  onChange={(e) =>
+                    setSelectedCategory(
+                      selectedCategory === "Laptop" ? "" : "Laptop"
+                    )
+                  }
+                />
+                <label className="form-check-label" htmlFor="tablet">
+                  Laptop
+                </label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value="Games"
+                  id="games"
+                  checked={selectedCategory === "Games"}
+                  onChange={(e) =>
+                    setSelectedCategory(
+                      selectedCategory === "Games" ? "" : "Games"
+                    )
+                  }
+                />
+                <label className="form-check-label" htmlFor="tablet">
+                  Games
+                </label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value="TV"
+                  id="tv"
+                  checked={selectedCategory === "TV"}
+                  onChange={(e) =>
+                    setSelectedCategory(selectedCategory === "TV" ? "" : "TV")
+                  }
+                />
+                <label className="form-check-label" htmlFor="tablet">
+                  TV
+                </label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value="HeadPhones"
+                  id="headphones"
+                  checked={selectedCategory === "HeadPhones"}
+                  onChange={(e) =>
+                    setSelectedCategory(
+                      selectedCategory === "HeadPhones" ? "" : "HeadPhones"
+                    )
+                  }
+                />
+                <label className="form-check-label" htmlFor="tablet">
+                  HeadPhones
+                </label>
+              </div>
             </div>
           </div>
         </div>
