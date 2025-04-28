@@ -170,7 +170,7 @@ export default function HomePage() {
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value)}
                 >
-                  <option value="">Ordina per...</option>
+                  <option value="" disabled>Ordina per...</option>
                   <option value="title-asc">Titolo A-Z</option>
                   <option value="title-desc">Titolo Z-A</option>
                   <option value="category-asc">Categoria A-Z</option>
