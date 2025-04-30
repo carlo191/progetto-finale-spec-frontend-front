@@ -1,12 +1,22 @@
-# React + Vite
+🏆 Requisiti Minimi
+Per considerare il progetto completo, devono essere implementate almeno queste funzionalità:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Gestione di una risorsa definita in types.ts
 
-Currently, two official plugins are available:
+Lista dei record, che mostra solo le proprietà principali title e category, e include:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Barra di ricerca per cercare nei titoli (title)
+Filtro per categoria (category)
+Ordinamento alfabetico per title o category (A-Z e Z-A)
+Pagina di dettaglio per ogni record, con visualizzazione estesa delle sue proprietà (es. price, description, brand, ecc.)
 
-## Expanding the ESLint configuration
+Comparatore di 2 record, visualizzati affiancati per confrontarne le caratteristiche.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+È libera la modalità di selezione: puoi permettere all’utente di aggiungere record al comparatore direttamente dalla lista, dalla pagina di dettaglio, oppure usare un menu a tendina, checkbox o qualsiasi altro sistema.
+
+L’importante è che l’utente possa scegliere 2 record qualsiasi e confrontarli in modo chiaro. 
+
+Sistema di preferiti, sempre accessibile e aggiornabile:
+
+L’utente può aggiungere o rimuovere record dai preferiti in qualsiasi momento
+I preferiti devono essere consultabili in ogni sezione dell’app (es. tramite una sezione dedicata, un’icona fissa, o una sidebar)

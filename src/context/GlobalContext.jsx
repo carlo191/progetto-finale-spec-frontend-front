@@ -42,12 +42,24 @@ export const GlobalProvider = ({ children }) => {
       .then((res) => res.json())
       .then((res) => {
         setProduct(res.product);
-       
       })
       .catch((error) => {
         console.error("Errore nel recupero del prodotto:", error);
       });
   };
+  const [favorites, setFavorites] = useState([]);
+
+  const toggleFavorite = (product) => {
+    setFavorites((prev) => {
+      const isFavorite = prev.find((p) => p.id === product.id);
+      if (isFavorite) {
+        return prev.filter((p) => p.id !== product.id);
+      } else {
+        return [...prev, product];
+      }
+    });
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -57,6 +69,9 @@ export const GlobalProvider = ({ children }) => {
         product, // Esponiamo la proprietà selezionata
         setProduct, // Esponiamo la funzione per aggiornare la proprietà
         showProduct, // Esponiamo la funzione per mostrare i dettagli della proprietà
+        favorites, // Esponiamo la lista dei preferiti
+        setFavorites, // Esponiamo la funzione per aggiornare i preferiti
+        toggleFavorite, // Esponiamo la funzione per aggiungere/rimuovere dai preferiti
       }}
     >
       {children}

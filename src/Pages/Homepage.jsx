@@ -7,6 +7,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [comparisonList, setComparisonList] = useState([]);
+  const { favorites, toggleFavorite } = useGlobalContext();
 
   const { productsList } = useGlobalContext();
   const navigate = useNavigate();
@@ -126,6 +127,14 @@ export default function HomePage() {
                     onClick={() => goToDetail(product.id)}
                   >
                     Vedi dettagli
+                  </button>
+                  <button
+                    className="btn btn-outline-danger btn-sm mt-2"
+                    onClick={() => toggleFavorite(product)}
+                  >
+                    {favorites.some((p) => p.id === product.id)
+                      ? "★ Rimuovi dai preferiti"
+                      : "☆ Aggiungi ai preferiti"}
                   </button>
 
                   <div className="form-check mt-2">
