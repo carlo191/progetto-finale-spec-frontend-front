@@ -5,6 +5,7 @@ import { useGlobalContext } from "../context/GlobalContext";
 export default function DetailPage() {
   const { id } = useParams();
   const { product, showProduct } = useGlobalContext();
+  const { favorites, toggleFavorite } = useGlobalContext();
 
   useEffect(() => {
     if (id) {
@@ -41,6 +42,11 @@ export default function DetailPage() {
       <p>
         <strong>Disponibilità:</strong> {product.inStock ? "SI" : "NO"}
       </p>
+      <button onClick={() => toggleFavorite(product)} id="btn-detailPage">
+        {favorites.some((p) => p.id === product.id)
+          ? " Rimuovi dai preferiti ★"
+          : " Aggiungi ai preferiti ☆ "}
+      </button>
     </div>
   );
 }

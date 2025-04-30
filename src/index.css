@@ -12,6 +12,15 @@ main {
   flex-grow: 1;
 }
 footer {
-
   margin-top: auto;
+}
+/* Bottone dei preferiti */
+#btn-favorite-homePage {
+  background-color: #f8f9fa;
+
+  font-size: 20px;
+  padding: 15px 15px;
+  position: absolute;
+  top: -4%;
+  right: 2px;
 }

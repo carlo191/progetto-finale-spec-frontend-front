@@ -6,7 +6,7 @@ export default function Navbar() {
   const { favorites } = useGlobalContext(); // ✅ Usato correttamente dentro il componente
 
   return (
-    <nav className="z-3 navbar navbar-expand-lg bg-primary position-fixed w-100">
+    <nav className="z-3 navbar navbar-expand-lg bg-primary  w-100">
       <div className="container-fluid d-flex justify-content-between align-items-center">
         {/* Logo */}
         <Link className="fs-2 fw-semibold text-light" to="/">
@@ -14,8 +14,8 @@ export default function Navbar() {
         </Link>
 
         {/* Link ai Preferiti */}
-        <Link to="/preferiti" className="btn btn-warning">
-          ★ Vai ai Preferiti ({favorites.length})
+        <Link to="/preferiti" className="btn btn-danger">
+          Vai ai Preferiti ({favorites.length})
         </Link>
       </div>
     </nav>

@@ -7,10 +7,17 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [comparisonList, setComparisonList] = useState([]);
-  const { favorites, toggleFavorite } = useGlobalContext();
-
-  const { productsList } = useGlobalContext();
+  const { favorites, toggleFavorite, productsList } = useGlobalContext();
   const navigate = useNavigate();
+
+  // Stato per gestire il colore del cuore di ogni prodotto
+  const [favoriteStatus, setFavoriteStatus] = useState({});
+  const toggleFavoriteColor = (productId) => {
+    setFavoriteStatus((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+  };
 
   const goToDetail = (id) => {
     navigate(`/product/${id}`);
@@ -117,24 +124,44 @@ export default function HomePage() {
           {filteredProducts.map((product) => (
             <div className="col-md-4 mb-4" key={product.id}>
               <div className="card shadow-sm">
-                <div className="card-body">
+                <div className="card-body position-relative">
                   <h5 className="card-title">{product.title}</h5>
                   <h6 className="card-subtitle mb-2 text-muted">
                     {product.category}
                   </h6>
+
+                  {/* Cuore dei preferiti */}
                   <button
-                    className="btn btn-primary btn-sm"
+                    id="btn-favorite-homePage"
+                    onClick={() => {
+                      toggleFavorite(product);
+                      toggleFavoriteColor(product.id);
+                    }}
+                    aria-label="Aggiungi ai preferiti"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: favoriteStatus[product.id] ? "red" : "gray",
+                        fontSize: "2.5rem",
+                        transition: "color 0.3s",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {favoriteStatus[product.id] ? "♥" : "♡"}
+                    </span>
+                  </button>
+
+                  <button
+                    className="btn btn-primary btn-sm mt-4"
                     onClick={() => goToDetail(product.id)}
                   >
                     Vedi dettagli
-                  </button>
-                  <button
-                    className="btn btn-outline-danger btn-sm mt-2"
-                    onClick={() => toggleFavorite(product)}
-                  >
-                    {favorites.some((p) => p.id === product.id)
-                      ? "★ Rimuovi dai preferiti"
-                      : "☆ Aggiungi ai preferiti"}
                   </button>
 
                   <div className="form-check mt-2">
