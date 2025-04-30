@@ -2,24 +2,25 @@ import { Outlet } from "react-router-dom";
 
 // Components
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
 export default function DefaultLayout() {
   return (
-    <>
-      <div className="wrapper d-flex flex-column">
-        <header>
-          <Navbar />
-        </header>
+    <div className="wrapper d-flex flex-column min-vh-100">
+      <header>
+        <Navbar />
+      </header>
 
-        <main className="flex-grow-1 mt-4 mb-5">
-          <Outlet />
-        </main>
+      <main className="flex-grow-1 mt-4">
+        <Outlet />
+      </main>
 
-        <footer>
-          <Footer />
-        </footer>
-      </div>
-    </>
+      <footer className="mt-auto">
+        <div className="text-center py-3 bg-primary text-light">
+          <p className="mb-0">© 2023 CELXPERT. Tutti i diritti riservati.</p>
+          <p className="mb-0">Realizzato da [Il tuo nome]</p>
+        </div>
+      </footer>
+    </div>
   );
 }
+
