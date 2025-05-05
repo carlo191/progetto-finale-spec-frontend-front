@@ -16,11 +16,10 @@ export default function DefaultLayout() {
 
       <footer className="mt-auto">
         <div className="text-center py-3 bg-primary text-light">
-          <p className="mb-0">© 2023 CELXPERT. Tutti i diritti riservati.</p>
-          <p className="mb-0">Realizzato da [Il tuo nome]</p>
+          <p className="mb-0">© 2025 CELXPERT. Tutti i diritti riservati.</p>
+          <p className="mb-0">Realizzato da [Carlo Elvisi]</p>
         </div>
       </footer>
     </div>
   );
 }
-
