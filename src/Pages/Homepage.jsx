@@ -10,30 +10,45 @@ export default function HomePage() {
   const { favorites, toggleFavorite, productsList } = useGlobalContext();
   const navigate = useNavigate();
 
-  // Stato per gestire il colore del cuore di ogni prodotto
-  const [favoriteStatus, setFavoriteStatus] = useState({});
-  const toggleFavoriteColor = (productId) => {
-    setFavoriteStatus((prev) => ({
-      ...prev,
-      [productId]: !prev[productId],
-    }));
-  };
+// Inizializzo uno stato per salvare se un cuore è acceso o spento per ogni prodotto
+// È un oggetto dove la chiave è l'ID del prodotto e il valore è true (acceso) o false (spento)
+const [favoriteStatus, setFavoriteStatus] = useState({});
 
+// Funzione che cambia lo stato del cuore per un prodotto
+// Se il cuore era acceso, lo spegne; se era spento, lo accende
+const toggleFavoriteColor = (productId) => {
+  setFavoriteStatus((prev) => ({
+    // Mantengo tutti gli stati dei cuori precedenti
+    ...prev,
+    // Cambio solo quello del prodotto cliccato: true diventa false, false diventa true
+    [productId]: !prev[productId],
+  }));
+};
   const goToDetail = (id) => {
     navigate(`/product/${id}`);
   };
 
   const toggleCompareProduct = (product) => {
+    // Aggiorna lo stato della lista di confronto basandosi sul valore precedente
     setComparisonList((prev) => {
+      // 1. Se il prodotto è già presente in confronto (id uguale)
       if (prev.find((p) => p.id === product.id)) {
+        // → lo rimuovo filtrando l’array, escludendo l’ID corrispondente
         return prev.filter((p) => p.id !== product.id);
+  
+      // 2. Altrimenti, se nella lista ci sono meno di 2 prodotti
       } else if (prev.length < 2) {
+        // → aggiungo il nuovo prodotto, espandendo l’array esistente
         return [...prev, product];
+  
+      // 3. Se ci sono già 2 prodotti e tento di aggiungerne un altro
       } else {
+        // → non modifico nulla, restituisco lo stato precedente
         return prev;
       }
     });
   };
+  
 
   const filteredProducts = productsList
     .filter((product) => {
@@ -48,14 +63,26 @@ export default function HomePage() {
       return matchesSearch && matchesCategory;
     })
     .sort((a, b) => {
-      if (sortOption === "title-asc") return a.title.localeCompare(b.title);
-      if (sortOption === "title-desc") return b.title.localeCompare(a.title);
+      // 1. Se l’opzione è “title-asc”, ordino i titoli in ordine alfabetico crescente
+      if (sortOption === "title-asc") 
+        return a.title.localeCompare(b.title);
+    
+      // 2. Se l’opzione è “title-desc”, ordino i titoli in ordine alfabetico decrescente
+      if (sortOption === "title-desc") 
+        return b.title.localeCompare(a.title);
+    
+      // 3. Se l’opzione è “category-asc”, ordino le categorie in ordine alfabetico crescente
       if (sortOption === "category-asc")
         return a.category.localeCompare(b.category);
+    
+      // 4. Se l’opzione è “category-desc”, ordino le categorie in ordine alfabetico decrescente
       if (sortOption === "category-desc")
         return b.category.localeCompare(a.category);
+    
+      // 5. Se non corrisponde nessuna opzione, lascio inalterato l’ordine (return 0)
       return 0;
     });
+    
 
   return (
     <>

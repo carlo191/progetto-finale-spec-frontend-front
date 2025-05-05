@@ -8,15 +8,9 @@ export default function DetailPage() {
   const { favorites, toggleFavorite } = useGlobalContext();
 
   useEffect(() => {
-    if (id) {
-      showProduct(id);
-    }
+    showProduct(id); // Carica il prodotto quando il componente si monta
+    // e quando l'ID cambia
   }, [id]);
-
-  // Verifica se i dati del prodotto sono stati recuperati
-  if (!product || product.id === 0) {
-    return <div>Caricamento...</div>; // Mostra il caricamento fino a quando il prodotto non è disponibile
-  }
 
   return (
     <div className="container mt-5">
