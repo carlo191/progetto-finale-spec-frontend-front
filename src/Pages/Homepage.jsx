@@ -190,12 +190,12 @@ export default function HomePage() {
         </div>
 
         {comparisonList.length === 2 && (
-          <div className="mt-5">
+          <div className="mt-5 mb-5">
             <h3 className="text-center">Confronto prodotti</h3>
             <div className="row">
               {comparisonList.map((product) => (
                 <div className="col-md-6" key={product.id}>
-                  <div className="card border border-success shadow-sm">
+                  <div className="card border  shadow-sm">
                     <div className="row g-0">
                       <div className="col-md-8">
                         <div className="card-body">
@@ -216,6 +216,37 @@ export default function HomePage() {
                           <p>
                             <strong>Voto:</strong> {product.rating}
                           </p>
+                          {/* Cuore dei preferiti */}
+                          <button
+                            id="btn-favorite-homePage"
+                            onClick={() => {
+                              toggleFavorite(product);
+                              toggleFavoriteColor(product.id);
+                            }}
+                            aria-label="Aggiungi ai preferiti"
+                            style={{
+                              background: "none",
+                              border: "none",
+                              padding: 0,
+                              cursor: "pointer",
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: favoriteStatus[product.id]
+                                  ? "red"
+                                  : "gray",
+                                fontSize: "2.5rem",
+                                transition: "color 0.3s",
+                                lineHeight: 1,
+                                top: "5px",
+                                position: "absolute",
+                                right: "1px",
+                              }}
+                            >
+                              {favoriteStatus[product.id] ? "♥" : "♡"}
+                            </span>
+                          </button>
                         </div>
                       </div>
                       <div className="col-md-4 d-flex align-items-center justify-content-center">

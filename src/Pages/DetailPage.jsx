@@ -42,10 +42,14 @@ export default function DetailPage() {
       <p>
         <strong>Disponibilità:</strong> {product.inStock ? "SI" : "NO"}
       </p>
-      <button onClick={() => toggleFavorite(product)} id="btn-detailPage">
+      <button
+        onClick={() => toggleFavorite(product)}
+        id="btn-detailPage"
+        className="btn btn-primary mb-3"
+      >
         {favorites.some((p) => p.id === product.id)
-          ? " Rimuovi dai preferiti ★"
-          : " Aggiungi ai preferiti ☆ "}
+          ? " Rimuovi dai preferiti ♥"
+          : " Aggiungi ai preferiti ♡ "}
       </button>
     </div>
   );
