@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { useGlobalContext } from "../context/GlobalContext";
+import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGlobalContext } from "../context/GlobalContext";
+import ProductCard from "../components/ProductCard";
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
@@ -10,20 +11,21 @@ export default function HomePage() {
   const { favorites, toggleFavorite, productsList } = useGlobalContext();
   const navigate = useNavigate();
 
-// Inizializzo uno stato per salvare se un cuore è acceso o spento per ogni prodotto
-// È un oggetto dove la chiave è l'ID del prodotto e il valore è true (acceso) o false (spento)
-const [favoriteStatus, setFavoriteStatus] = useState({});
+  // Inizializzo uno stato per salvare se un cuore è acceso o spento per ogni prodotto
+  // È un oggetto dove la chiave è l'ID del prodotto e il valore è true (acceso) o false (spento)
+  const [favoriteStatus, setFavoriteStatus] = useState({});
 
-// Funzione che cambia lo stato del cuore per un prodotto
-// Se il cuore era acceso, lo spegne; se era spento, lo accende
-const toggleFavoriteColor = (productId) => {
-  setFavoriteStatus((prev) => ({
-    // Mantengo tutti gli stati dei cuori precedenti
-    ...prev,
-    // Cambio solo quello del prodotto cliccato: true diventa false, false diventa true
-    [productId]: !prev[productId],
-  }));
-};
+  // Funzione che cambia lo stato del cuore per un prodotto
+  // Se il cuore era acceso, lo spegne; se era spento, lo accende
+  const toggleFavoriteColor = (productId) => {
+    setFavoriteStatus((prev) => ({
+      // Mantengo tutti gli stati dei cuori precedenti
+      ...prev,
+      // Cambio solo quello del prodotto cliccato: true diventa false, false diventa true
+      [productId]: !prev[productId],
+    }));
+  };
+
   const goToDetail = (id) => {
     navigate(`/product/${id}`);
   };
@@ -35,54 +37,62 @@ const toggleFavoriteColor = (productId) => {
       if (prev.find((p) => p.id === product.id)) {
         // → lo rimuovo filtrando l’array, escludendo l’ID corrispondente
         return prev.filter((p) => p.id !== product.id);
-  
-      // 2. Altrimenti, se nella lista ci sono meno di 2 prodotti
+
+        // 2. Altrimenti, se nella lista ci sono meno di 2 prodotti
       } else if (prev.length < 2) {
         // → aggiungo il nuovo prodotto, espandendo l’array esistente
         return [...prev, product];
-  
-      // 3. Se ci sono già 2 prodotti e tento di aggiungerne un altro
+
+        // 3. Se ci sono già 2 prodotti e tento di aggiungerne un altro
       } else {
         // → non modifico nulla, restituisco lo stato precedente
         return prev;
       }
     });
   };
-  
 
-  const filteredProducts = productsList
-    .filter((product) => {
+  // Memoizzo l'elenco dei prodotti filtrati e ordinati
+  const filteredProducts = useMemo(() => {
+    // 1. Filtro i prodotti in base alla ricerca e alla categoria selezionata
+    const filtered = productsList.filter((product) => {
+      // Controllo se il titolo del prodotto include il testo della ricerca (case-insensitive)
       const matchesSearch = product.title
         .toLowerCase()
         .includes(search.toLowerCase());
 
+      // Controllo se la categoria del prodotto corrisponde a quella selezionata
       const matchesCategory = selectedCategory
         ? product.category === selectedCategory
-        : true;
+        : true; // Se nessuna categoria è selezionata, passo tutti
 
       return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      // 1. Se l’opzione è “title-asc”, ordino i titoli in ordine alfabetico crescente
-      if (sortOption === "title-asc") 
-        return a.title.localeCompare(b.title);
-    
-      // 2. Se l’opzione è “title-desc”, ordino i titoli in ordine alfabetico decrescente
-      if (sortOption === "title-desc") 
-        return b.title.localeCompare(a.title);
-    
-      // 3. Se l’opzione è “category-asc”, ordino le categorie in ordine alfabetico crescente
+    });
+
+    // 2. Ordino i prodotti filtrati in base all'opzione di ordinamento selezionata
+    const sorted = filtered.sort((a, b) => {
+      // Ordinamento alfabetico crescente per titolo
+      if (sortOption === "title-asc") return a.title.localeCompare(b.title);
+
+      // Ordinamento alfabetico decrescente per titolo
+      if (sortOption === "title-desc") return b.title.localeCompare(a.title);
+
+      // Ordinamento alfabetico crescente per categoria
       if (sortOption === "category-asc")
         return a.category.localeCompare(b.category);
-    
-      // 4. Se l’opzione è “category-desc”, ordino le categorie in ordine alfabetico decrescente
+
+      // Ordinamento alfabetico decrescente per categoria
       if (sortOption === "category-desc")
         return b.category.localeCompare(a.category);
-    
-      // 5. Se non corrisponde nessuna opzione, lascio inalterato l’ordine (return 0)
+
+      // Nessun ordinamento specifico: lascio l’ordine originale
       return 0;
     });
-    
+
+    // 3. Restituisco l’elenco filtrato e ordinato
+    return sorted;
+
+    // La memoizzazione viene rigenerata solo se cambia uno di questi valori
+  }, [productsList, search, selectedCategory, sortOption]);
 
   return (
     <>
@@ -149,70 +159,19 @@ const toggleFavoriteColor = (productId) => {
         <h2 className="text-center">I nostri prodotti</h2>
         <div className="row mt-4">
           {filteredProducts.map((product) => (
-            <div className="col-md-4 mb-4" key={product.id}>
-              <div className="card shadow-sm">
-                <div className="card-body position-relative">
-                  <h5 className="card-title">{product.title}</h5>
-                  <h6 className="card-subtitle mb-2 text-muted">
-                    {product.category}
-                  </h6>
-
-                  {/* Cuore dei preferiti */}
-                  <button
-                    id="btn-favorite-homePage"
-                    onClick={() => {
-                      toggleFavorite(product);
-                      toggleFavoriteColor(product.id);
-                    }}
-                    aria-label="Aggiungi ai preferiti"
-                    style={{
-                      background: "none",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: favoriteStatus[product.id] ? "red" : "gray",
-                        fontSize: "2.5rem",
-                        transition: "color 0.3s",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {favoriteStatus[product.id] ? "♥" : "♡"}
-                    </span>
-                  </button>
-
-                  <button
-                    className="btn btn-primary btn-sm mt-4"
-                    onClick={() => goToDetail(product.id)}
-                  >
-                    Vedi dettagli
-                  </button>
-
-                  <div className="form-check mt-2">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id={`compare-${product.id}`}
-                      checked={comparisonList.some((p) => p.id === product.id)}
-                      onChange={() => toggleCompareProduct(product)}
-                      disabled={
-                        !comparisonList.some((p) => p.id === product.id) &&
-                        comparisonList.length >= 2
-                      }
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor={`compare-${product.id}`}
-                    >
-                      Confronta
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ProductCard
+              key={product.id}
+              product={product}
+              isFavorite={favoriteStatus[product.id]}
+              toggleFavorite={toggleFavorite}
+              toggleFavoriteColor={toggleFavoriteColor}
+              goToDetail={goToDetail}
+              toggleCompareProduct={toggleCompareProduct}
+              isInComparison={comparisonList.some((p) => p.id === product.id)}
+              disableCheckbox={
+                !comparisonList.some((p) => p.id === product.id) && comparisonList.length >= 2
+              }
+            />
           ))}
         </div>
 
@@ -222,27 +181,16 @@ const toggleFavoriteColor = (productId) => {
             <div className="row">
               {comparisonList.map((product) => (
                 <div className="col-md-6" key={product.id}>
-                  <div className="card border  shadow-sm">
+                  <div className="card border shadow-sm">
                     <div className="row g-0">
                       <div className="col-md-8">
                         <div className="card-body">
                           <h5 className="card-title">{product.title}</h5>
-                          <p>
-                            <strong>Categoria:</strong> {product.category}
-                          </p>
-                          <p>
-                            <strong>Prezzo:</strong> €{product.price}
-                          </p>
-                          <p>
-                            <strong>Brand:</strong> {product.brand}
-                          </p>
-                          <p>
-                            <strong>Disponibile:</strong>{" "}
-                            {product.inStock ? "Sì" : "No"}
-                          </p>
-                          <p>
-                            <strong>Voto:</strong> {product.rating}
-                          </p>
+                          <p><strong>Categoria:</strong> {product.category}</p>
+                          <p><strong>Prezzo:</strong> €{product.price}</p>
+                          <p><strong>Brand:</strong> {product.brand}</p>
+                          <p><strong>Disponibile:</strong> {product.inStock ? "Sì" : "No"}</p>
+                          <p><strong>Voto:</strong> {product.rating}</p>
                           {/* Cuore dei preferiti */}
                           <button
                             id="btn-favorite-homePage"
