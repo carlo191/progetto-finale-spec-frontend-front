@@ -37,6 +37,7 @@ export const GlobalProvider = ({ children }) => {
   useEffect(() => {
     indexProperty();
   }, []);
+
   const showProduct = (id) => {
     fetch(`http://localhost:3001/products/${id}`)
       .then((res) => res.json())
@@ -47,7 +48,17 @@ export const GlobalProvider = ({ children }) => {
         console.error("Errore nel recupero del prodotto:", error);
       });
   };
-  const [favorites, setFavorites] = useState([]);
+
+  // Inizializza i preferiti leggendo dal localStorage
+  const [favorites, setFavorites] = useState(() => {
+    const stored = localStorage.getItem("favorites");
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  // Salva i preferiti nel localStorage ogni volta che cambiano
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
   const toggleFavorite = (product) => {
     setFavorites((prev) => {
