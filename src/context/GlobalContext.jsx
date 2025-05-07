@@ -49,16 +49,25 @@ export const GlobalProvider = ({ children }) => {
       });
   };
 
-  // Inizializza i preferiti leggendo dal localStorage
+   // Inizializza i preferiti leggendo dal localStorage
+  // Questo codice viene eseguito **una sola volta** quando il componente viene montato
+  // Serve a caricare eventuali preferiti salvati in precedenza nel browser
   const [favorites, setFavorites] = useState(() => {
+    // Leggo la stringa salvata nel localStorage con chiave "favorites"
     const stored = localStorage.getItem("favorites");
+
+    // Se trovo qualcosa, la trasformo da stringa JSON a array JavaScript
+    // Altrimenti, inizializzo con un array vuoto (nessun preferito salvato)
     return stored ? JSON.parse(stored) : [];
   });
 
-  // Salva i preferiti nel localStorage ogni volta che cambiano
+  // Ogni volta che la lista dei preferiti cambia (aggiunta o rimozione),
+  // aggiorno automaticamente il localStorage con il nuovo stato
   useEffect(() => {
+    // Converto l'array dei preferiti in stringa JSON e lo salvo con la chiave "favorites"
     localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
+  }, [favorites]); // L'effetto si riattiva solo quando `favorites` cambia
+
 
   const toggleFavorite = (product) => {
     setFavorites((prev) => {

@@ -1,15 +1,28 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo,useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../context/GlobalContext";
 import ProductCard from "../components/ProductCard";
+import { debounce } from "../../debaounce.js";
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [comparisonList, setComparisonList] = useState([]);
   const { favorites, toggleFavorite, productsList } = useGlobalContext();
   const navigate = useNavigate();
+  // Creo una funzione debounced che aggiorna `debouncedSearch` solo dopo 300ms
+const debouncedSearchHandler = useCallback(
+  debounce((value) => {
+    setDebouncedSearch(value);
+  }, 300),
+  []
+);
+const handleSearchChange = (e) => {
+  setSearch(e.target.value);
+  debouncedSearchHandler(e.target.value);
+};
 
   // Inizializzo uno stato per salvare se un cuore è acceso o spento per ogni prodotto
   // È un oggetto dove la chiave è l'ID del prodotto e il valore è true (acceso) o false (spento)
@@ -58,7 +71,7 @@ export default function HomePage() {
       // Controllo se il titolo del prodotto include il testo della ricerca (case-insensitive)
       const matchesSearch = product.title
         .toLowerCase()
-        .includes(search.toLowerCase());
+        .includes(debouncedSearch.toLowerCase());
 
       // Controllo se la categoria del prodotto corrisponde a quella selezionata
       const matchesCategory = selectedCategory
@@ -92,7 +105,7 @@ export default function HomePage() {
     return sorted;
 
     // La memoizzazione viene rigenerata solo se cambia uno di questi valori
-  }, [productsList, search, selectedCategory, sortOption]);
+  }, [productsList, debouncedSearch, selectedCategory, sortOption]);
 
   return (
     <>
@@ -108,7 +121,7 @@ export default function HomePage() {
                 className="form-control"
                 placeholder="Cerca un prodotto..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handleSearchChange}
               />
             </div>
 
@@ -169,7 +182,8 @@ export default function HomePage() {
               toggleCompareProduct={toggleCompareProduct}
               isInComparison={comparisonList.some((p) => p.id === product.id)}
               disableCheckbox={
-                !comparisonList.some((p) => p.id === product.id) && comparisonList.length >= 2
+                !comparisonList.some((p) => p.id === product.id) &&
+                comparisonList.length >= 2
               }
             />
           ))}
@@ -186,11 +200,22 @@ export default function HomePage() {
                       <div className="col-md-8">
                         <div className="card-body">
                           <h5 className="card-title">{product.title}</h5>
-                          <p><strong>Categoria:</strong> {product.category}</p>
-                          <p><strong>Prezzo:</strong> €{product.price}</p>
-                          <p><strong>Brand:</strong> {product.brand}</p>
-                          <p><strong>Disponibile:</strong> {product.inStock ? "Sì" : "No"}</p>
-                          <p><strong>Voto:</strong> {product.rating}</p>
+                          <p>
+                            <strong>Categoria:</strong> {product.category}
+                          </p>
+                          <p>
+                            <strong>Prezzo:</strong> €{product.price}
+                          </p>
+                          <p>
+                            <strong>Brand:</strong> {product.brand}
+                          </p>
+                          <p>
+                            <strong>Disponibile:</strong>{" "}
+                            {product.inStock ? "Sì" : "No"}
+                          </p>
+                          <p>
+                            <strong>Voto:</strong> {product.rating}
+                          </p>
                           {/* Cuore dei preferiti */}
                           <button
                             id="btn-favorite-homePage"
