@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { useGlobalContext } from "../context/GlobalContext";
 
 export default function Navbar() {
-  const { favorites } = useGlobalContext(); // ✅ Usato correttamente dentro il componente
+  const { favorites } = useGlobalContext(); // Ottieni i preferiti dal contesto
 
   return (
-    <nav className="z-3 navbar navbar-expand-lg bg-primary  w-100">
+    <nav className="z-3 navbar navbar-expand-lg bg-primary  w-100 fixed-top shadow-sm">
       <div className="container-fluid d-flex justify-content-between align-items-center">
         {/* Logo */}
         <Link className="fs-2 fw-semibold text-light" to="/">
